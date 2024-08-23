@@ -26,21 +26,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.apache.http.protocol.HTTP.CONTENT_TYPE;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventConverterAdapterTest {
     @InjectMocks
     private EventConverterAdapter eventConverterAdapter;
 
-    @Before
+    @BeforeEach
     public void before() {
         eventConverterAdapter.getEventConverterList()
             .add(new CloudEventBatchedConverter());
@@ -62,8 +62,8 @@ public class EventConverterAdapterTest {
         headers.put("ce-specversion", "1.0");
         byte[] body = new String("{\n" + "\t\"a\":1,\n" + "\t\"b\":2\n" + "}").getBytes(StandardCharsets.UTF_8);
         List<CloudEvent> cloudEventList = eventConverterAdapter.toEventsRequest(headers, body);
-        Assert.assertEquals(1, cloudEventList.size());
-        Assert.assertEquals("demo:type", cloudEventList.get(0)
+        Assertions.assertEquals(1, cloudEventList.size());
+        Assertions.assertEquals("demo:type", cloudEventList.get(0)
             .getType());
     }
 
@@ -82,8 +82,8 @@ public class EventConverterAdapterTest {
         List<CloudEvent> cloudEventList = eventConverterAdapter.toEventsRequest(headers, new Gson().toJson(cloudEvent)
             .getBytes(StandardCharsets.UTF_8));
 
-        Assert.assertEquals(1, cloudEventList.size());
-        Assert.assertEquals("demo:type", cloudEventList.get(0)
+        Assertions.assertEquals(1, cloudEventList.size());
+        Assertions.assertEquals("demo:type", cloudEventList.get(0)
             .getType());
     }
 
@@ -112,8 +112,8 @@ public class EventConverterAdapterTest {
             new Gson().toJson(Arrays.asList(cloudEvent1, cloudEvent2))
                 .getBytes(StandardCharsets.UTF_8));
 
-        Assert.assertEquals(2, cloudEventList.size());
-        Assert.assertEquals("demo:type", cloudEventList.get(0)
+        Assertions.assertEquals(2, cloudEventList.size());
+        Assertions.assertEquals("demo:type", cloudEventList.get(0)
             .getType());
     }
 

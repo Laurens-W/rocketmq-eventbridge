@@ -22,8 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.eventbridge.Main;
 import org.apache.rocketmq.eventbridge.e2etest.BaseTest;
 import org.apache.rocketmq.eventbridge.e2etest.util.Utils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
@@ -57,7 +57,7 @@ public class ApplicationTagControllerTest extends BaseTest {
         Thread.sleep(10000);
 
         ResponseEntity<Void> response = Utils.request(template, url, HttpMethod.POST, "A test recrod.", Void.class, headers);
-        Assert.assertTrue(response.getStatusCode().is2xxSuccessful());
+        Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
         File file = new File(System.getProperty("user.home") +"/demo");
         if (!file.exists()) {
             file.createNewFile();
@@ -73,7 +73,7 @@ public class ApplicationTagControllerTest extends BaseTest {
             Thread.sleep(50000);
             retries++;
         }
-        Assert.assertEquals("A test recrod.\n", data);
+        Assertions.assertEquals("A test recrod.\n", data);
     }
 
 

@@ -26,8 +26,8 @@ import io.openmessaging.KeyValue;
 import io.openmessaging.connector.api.data.ConnectRecord;
 import io.openmessaging.internal.DefaultKeyValue;
 import org.apache.rocketmq.connect.transform.eventbridge.EventBridgeTransform;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EventBridgeTransformTest {
 
@@ -48,6 +48,6 @@ public class EventBridgeTransformTest {
         record.setData(data);
 
         ConnectRecord result = eventBridgeTransform.doTransform(record);
-        Assert.assertEquals("{\"text\":{\"content\":\"demo\"},\"msgtype\":\"text\"}", result.getData());
+        Assertions.assertEquals("{\"text\":{\"content\":\"demo\"},\"msgtype\":\"text\"}", result.getData());
     }
 }

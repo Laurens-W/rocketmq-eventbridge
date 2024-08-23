@@ -19,12 +19,12 @@ package org.apache.rocketmq.eventbridge.domain.service;
 
 import org.apache.rocketmq.eventbridge.domain.model.rule.EventRuleService;
 import org.apache.rocketmq.eventbridge.domain.model.run.EventTargetRunnerService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventRuleDomainServiceTest {
     @InjectMocks
     private EventRuleDomainService eventRuleDomainService;

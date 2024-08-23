@@ -23,8 +23,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -54,13 +54,13 @@ public class BaseTest {
     @Autowired
     protected TestRestTemplate template;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         this.baseUrl = new URL("http://localhost:" + port);
     }
 
     protected <T> T parseDataFromResponse(ResponseEntity<Object> response, Class<T> dataType, Map<Class, Class> modelMapping) {
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
@@ -72,38 +72,38 @@ public class BaseTest {
             return mapper.readValue(mapper.writeValueAsString(response.getBody()), dataType);
         } catch (JsonParseException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         } catch (JsonMappingException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         } catch (IOException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         }
 
         return null;
     }
 
     protected <T> T parseDataFromResponse(ResponseEntity<Object> response, Class<T> dataType) {
-        Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
 
         try {
             return mapper.readValue(mapper.writeValueAsString(response.getBody()), dataType);
         } catch (JsonParseException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         } catch (JsonMappingException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         } catch (IOException e) {
             e.printStackTrace();
-            Assert.fail(e.toString());
+            Assertions.fail(e.toString());
         }
 
         return null;

@@ -25,8 +25,8 @@ import org.apache.rocketmq.eventbridge.domain.model.run.DeadLetterQueue;
 import org.apache.rocketmq.eventbridge.domain.model.run.RetryStrategy;
 import org.apache.rocketmq.eventbridge.domain.model.run.RunOptions;
 import org.apache.rocketmq.eventbridge.domain.model.target.EventTarget;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EventTargetDTOConverterTest {
 
@@ -56,38 +56,38 @@ public class EventTargetDTOConverterTest {
             .build();
 
         EventTargetDTO eventTargetDTO = EventTargetDTOConverter.convert(eventTarget);
-        Assert.assertEquals(eventTarget.getName(), eventTargetDTO.getEventTargetName());
-        Assert.assertEquals(eventTarget.getClassName(), eventTargetDTO.getClassName());
-        Assert.assertEquals(eventTarget.getConfig(), eventTargetDTO.getConfig());
+        Assertions.assertEquals(eventTarget.getName(), eventTargetDTO.getEventTargetName());
+        Assertions.assertEquals(eventTarget.getClassName(), eventTargetDTO.getClassName());
+        Assertions.assertEquals(eventTarget.getConfig(), eventTargetDTO.getConfig());
 
-        Assert.assertEquals(eventTarget.getRunOptions()
+        Assertions.assertEquals(eventTarget.getRunOptions()
             .getErrorsTolerance()
             .toString(), eventTargetDTO.getRunOptions()
             .getErrorsTolerance());
 
-        Assert.assertEquals(eventTarget.getRunOptions()
+        Assertions.assertEquals(eventTarget.getRunOptions()
             .getRetryStrategy()
             .getPushRetryStrategy()
             .toString(), eventTargetDTO.getRunOptions()
             .getRetryStrategy()
             .getPushRetryStrategy());
-        Assert.assertEquals(eventTarget.getRunOptions()
+        Assertions.assertEquals(eventTarget.getRunOptions()
             .getRetryStrategy()
             .getMaximumRetryAttempts(), eventTargetDTO.getRunOptions()
             .getRetryStrategy()
             .getMaximumRetryAttempts());
-        Assert.assertEquals(eventTarget.getRunOptions()
+        Assertions.assertEquals(eventTarget.getRunOptions()
             .getRetryStrategy()
             .getMaximumEventAgeInSeconds(), eventTargetDTO.getRunOptions()
             .getRetryStrategy()
             .getMaximumEventAgeInSeconds());
 
-        Assert.assertEquals(eventTarget.getRunOptions()
+        Assertions.assertEquals(eventTarget.getRunOptions()
             .getDeadLetterQueue()
             .getType(), eventTargetDTO.getRunOptions()
             .getDeadLetterQueue()
             .getType());
-        Assert.assertEquals(eventTarget.getRunOptions()
+        Assertions.assertEquals(eventTarget.getRunOptions()
             .getDeadLetterQueue()
             .getConfig(), eventTargetDTO.getRunOptions()
             .getDeadLetterQueue()

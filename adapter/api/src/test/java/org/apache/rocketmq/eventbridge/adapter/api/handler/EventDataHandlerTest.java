@@ -29,19 +29,19 @@ import org.apache.rocketmq.eventbridge.domain.model.data.EventDataService;
 import org.apache.rocketmq.eventbridge.domain.model.data.PutEventCallback;
 import org.apache.rocketmq.eventbridge.domain.model.data.PutEventsResponseEntry;
 import org.apache.rocketmq.eventbridge.event.EventBridgeEvent;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventDataHandlerTest {
     @InjectMocks
     private EventDataHandler eventDataHandler;
@@ -51,7 +51,7 @@ public class EventDataHandlerTest {
 
     ExecutorService executor = Executors.newFixedThreadPool(10);
 
-    @Before
+    @BeforeEach
     public void before() {
         Mockito.doAnswer((invocation) -> {
             Object[] args = invocation.getArguments();
@@ -78,10 +78,10 @@ public class EventDataHandlerTest {
         Mono<PutEventsResponse> mono = eventDataHandler.putEvents("123456", eventList);
         PutEventsResponse putEventsResponse = mono.block();
         Long costTime = System.currentTimeMillis() - startTime;
-        Assert.assertEquals(10, putEventsResponse.getEntryList()
+        Assertions.assertEquals(10, putEventsResponse.getEntryList()
             .size());
         System.out.println("costTime:" + costTime);
-        Assert.assertEquals(true, costTime < 4000);
+        Assertions.assertEquals(true, costTime < 4000);
     }
 
     class PutEventTestThread implements Runnable {

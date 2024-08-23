@@ -24,23 +24,22 @@ import org.apache.rocketmq.eventbridge.domain.model.rule.EventRule;
 import org.apache.rocketmq.eventbridge.domain.model.rule.EventRuleService;
 import org.apache.rocketmq.eventbridge.domain.repository.EventRuleRepository;
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.dao.DuplicateKeyException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventRuleServiceTest {
 
     @InjectMocks
@@ -52,10 +51,7 @@ public class EventRuleServiceTest {
     @Mock
     private EventBusService eventBusService;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void before() {
         doNothing().when(eventBusService)
             .checkExist(any(), any());
@@ -63,34 +59,37 @@ public class EventRuleServiceTest {
 
     @Test
     public void testCreateEventRule_exception1() {
-        when(eventRuleRepository.createEventRule(any(), any(), any(), any(), any(), any())).thenThrow(
-            new DuplicateKeyException(""));
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event rule [demo-rule] of event bus [demo] already existed!");
-        eventRuleService.createEventRule("123456", "demo", "demo-rule", "description", "{}");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventRuleRepository.createEventRule(any(), any(), any(), any(), any(), any())).thenThrow(
+                new DuplicateKeyException(""));
+            eventRuleService.createEventRule("123456", "demo", "demo-rule", "description", "{}");
+        });
+        assertTrue(exception.getMessage().contains("The event rule [demo-rule] of event bus [demo] already existed!"));
     }
 
     @Test
     public void testCreateEventRule_exception2() {
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event rule name [$demo-rule] is invalid!");
-        eventRuleService.createEventRule("123456", "demo", "$demo-rule", "description", "{}");
+        Throwable exception = assertThrows(EventBridgeException.class, () ->
+            eventRuleService.createEventRule("123456", "demo", "$demo-rule", "description", "{}"));
+        assertTrue(exception.getMessage().contains("The event rule name [$demo-rule] is invalid!"));
     }
 
     @Test
     public void testGetEventRule_exception1() {
-        when(eventRuleRepository.getEventRule(any(), any(), any())).thenReturn(null);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event rule [demo-rule] of event bus [demo] not existed!");
-        eventRuleService.getEventRule("123456", "demo", "demo-rule");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventRuleRepository.getEventRule(any(), any(), any())).thenReturn(null);
+            eventRuleService.getEventRule("123456", "demo", "demo-rule");
+        });
+        assertTrue(exception.getMessage().contains("The event rule [demo-rule] of event bus [demo] not existed!"));
     }
 
     @Test
     public void testDeleteEventRule_exception1() {
-        when(eventRuleRepository.getEventRule(any(), any(), any())).thenReturn(null);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event rule [demo-source] of event bus [demo] not existed!");
-        eventRuleService.deleteEventRule("123456", "demo", "demo-source");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventRuleRepository.getEventRule(any(), any(), any())).thenReturn(null);
+            eventRuleService.deleteEventRule("123456", "demo", "demo-source");
+        });
+        assertTrue(exception.getMessage().contains("The event rule [demo-source] of event bus [demo] not existed!"));
     }
 
     @Test
@@ -104,11 +103,11 @@ public class EventRuleServiceTest {
         when(eventRuleRepository.getEventRulesCount(any(), any())).thenReturn(1);
         when(eventRuleRepository.listEventRules(any(), any(), any(), anyInt())).thenReturn(eventRules);
         PaginationResult<List<EventRule>> paginationResult = eventRuleService.listEventRules("123456", "demo", "0", 10);
-        Assert.assertEquals(1, paginationResult.getTotal());
-        Assert.assertEquals(null, paginationResult.getNextToken());
-        Assert.assertEquals(1, paginationResult.getData()
+        Assertions.assertEquals(1, paginationResult.getTotal());
+        Assertions.assertEquals(null, paginationResult.getNextToken());
+        Assertions.assertEquals(1, paginationResult.getData()
             .size());
-        Assert.assertEquals("demo-rule", paginationResult.getData()
+        Assertions.assertEquals("demo-rule", paginationResult.getData()
             .get(0)
             .getName());
     }

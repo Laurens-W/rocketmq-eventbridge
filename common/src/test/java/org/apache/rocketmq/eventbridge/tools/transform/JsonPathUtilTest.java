@@ -17,13 +17,13 @@
 
 package org.apache.rocketmq.eventbridge.tools.transform;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class JsonPathUtilTest {
 
     @Test
     public void removeDataOfJsonPath() {
-        Assert.assertEquals("$.body", JsonPathUtil.removeDataOfJsonPath("$.data.body"));
+        Assertions.assertEquals("$.body", JsonPathUtil.removeDataOfJsonPath("$.data.body"));
     }
 }

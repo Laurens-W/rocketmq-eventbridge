@@ -27,8 +27,8 @@ import org.apache.rocketmq.eventbridge.enums.PushRetryStrategyEnum;
 import org.apache.rocketmq.eventbridge.domain.model.run.DeadLetterQueue;
 import org.apache.rocketmq.eventbridge.domain.model.run.RetryStrategy;
 import org.apache.rocketmq.eventbridge.domain.model.target.EventTarget;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EventTargetConverterTest {
 
@@ -54,12 +54,12 @@ public class EventTargetConverterTest {
 
         EventTarget eventTarget = EventTargetConverter.convertEventTarget("123456", "bus", "rule", eventTargetDTO);
 
-        Assert.assertEquals(eventTarget.getAccountId(), "123456");
-        Assert.assertEquals(eventTarget.getEventBusName(), "bus");
-        Assert.assertEquals(eventTarget.getEventRuleName(), "rule");
-        Assert.assertEquals(eventTarget.getName(), eventTargetDTO.getEventTargetName());
-        Assert.assertEquals(eventTarget.getClassName(), eventTargetDTO.getClassName());
-        Assert.assertEquals(eventTarget.getConfig(), eventTargetDTO.getConfig());
+        Assertions.assertEquals(eventTarget.getAccountId(), "123456");
+        Assertions.assertEquals(eventTarget.getEventBusName(), "bus");
+        Assertions.assertEquals(eventTarget.getEventRuleName(), "rule");
+        Assertions.assertEquals(eventTarget.getName(), eventTargetDTO.getEventTargetName());
+        Assertions.assertEquals(eventTarget.getClassName(), eventTargetDTO.getClassName());
+        Assertions.assertEquals(eventTarget.getConfig(), eventTargetDTO.getConfig());
     }
 
     @Test
@@ -67,24 +67,24 @@ public class EventTargetConverterTest {
         RetryStrategyDTO retryStrategyDTO = buildRetryStrategyDTO();
         RetryStrategy retryStrategy = EventTargetConverter.convertRetryStrategy(retryStrategyDTO);
 
-        Assert.assertEquals(PushRetryStrategyEnum.BACKOFF_RETRY, retryStrategy.getPushRetryStrategy());
-        Assert.assertEquals(retryStrategyDTO.getMaximumRetryAttempts(), retryStrategy.getMaximumRetryAttempts());
-        Assert.assertEquals(retryStrategyDTO.getMaximumEventAgeInSeconds(),
+        Assertions.assertEquals(PushRetryStrategyEnum.BACKOFF_RETRY, retryStrategy.getPushRetryStrategy());
+        Assertions.assertEquals(retryStrategyDTO.getMaximumRetryAttempts(), retryStrategy.getMaximumRetryAttempts());
+        Assertions.assertEquals(retryStrategyDTO.getMaximumEventAgeInSeconds(),
             retryStrategy.getMaximumEventAgeInSeconds());
     }
 
     @Test
     public void convertErrorTolerance() {
         ErrorToleranceEnum errorToleranceEnum = EventTargetConverter.convertErrorTolerance("NONE");
-        Assert.assertEquals(ErrorToleranceEnum.NONE, errorToleranceEnum);
+        Assertions.assertEquals(ErrorToleranceEnum.NONE, errorToleranceEnum);
     }
 
     @Test
     public void convertDeadLetterQueue() {
         DeadLetterQueueDTO deadLetterQueueDTO = this.buildDeadLetterQueueDTO();
         DeadLetterQueue deadLetterQueue = EventTargetConverter.convertDeadLetterQueue(deadLetterQueueDTO);
-        Assert.assertEquals(deadLetterQueue.getType(), deadLetterQueueDTO.getType());
-        Assert.assertEquals(deadLetterQueue.getConfig(), deadLetterQueueDTO.getConfig());
+        Assertions.assertEquals(deadLetterQueue.getType(), deadLetterQueueDTO.getType());
+        Assertions.assertEquals(deadLetterQueue.getConfig(), deadLetterQueueDTO.getConfig());
     }
 
     private RetryStrategyDTO buildRetryStrategyDTO() {

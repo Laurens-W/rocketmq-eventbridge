@@ -30,20 +30,19 @@ import org.apache.rocketmq.eventbridge.domain.model.connection.ConnectionDTO;
 import org.apache.rocketmq.eventbridge.domain.model.connection.ConnectionService;
 import org.apache.rocketmq.eventbridge.domain.model.quota.QuotaService;
 import org.apache.rocketmq.eventbridge.domain.repository.ApiDestinationRepository;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class ApiDestinationServiceTest {
 
     @InjectMocks
@@ -55,7 +54,7 @@ public class ApiDestinationServiceTest {
     @Mock
     private ConnectionService connectionService;
 
-    @Before
+    @BeforeEach
     public void testBefore() {
         Mockito.when(apiDestinationRepository.createApiDestination(any())).thenReturn(Boolean.TRUE);
         Mockito.when(apiDestinationRepository.deleteApiDestination(any(), any())).thenReturn(Boolean.TRUE);
@@ -81,7 +80,7 @@ public class ApiDestinationServiceTest {
         httpApiParameters.setEndpoint("http://127.0.0.1:8001");
         eventApiDestinationDTO.setApiParams(httpApiParameters);
         final String apiDestination = apiDestinationService.createApiDestination(eventApiDestinationDTO);
-        Assert.assertNotNull(apiDestination);
+        Assertions.assertNotNull(apiDestination);
     }
 
     @Test
@@ -95,26 +94,26 @@ public class ApiDestinationServiceTest {
         httpApiParameters.setEndpoint("http://127.0.0.1:8001");
         apiDestinationDTO.setApiParams(httpApiParameters);
         final Boolean aBoolean = apiDestinationService.updateApiDestination(apiDestinationDTO);
-        Assert.assertTrue(aBoolean);
+        Assertions.assertTrue(aBoolean);
     }
 
     @Test
     public void testGetApiDestination() {
         Mockito.when(apiDestinationRepository.getApiDestination(any(), any())).thenReturn(new ApiDestinationDTO());
         final ApiDestinationDTO apiDestinationDTO = apiDestinationService.getApiDestination(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        Assert.assertNotNull(apiDestinationDTO);
+        Assertions.assertNotNull(apiDestinationDTO);
     }
 
     @Test
     public void testDeleteApiDestination() {
         Mockito.when(apiDestinationRepository.getApiDestination(any(), any())).thenReturn(new ApiDestinationDTO());
         final Boolean aBoolean = apiDestinationService.deleteApiDestination(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        Assert.assertTrue(aBoolean);
+        Assertions.assertTrue(aBoolean);
     }
 
     @Test
     public void testListApiDestinations() {
         final PaginationResult<List<ApiDestinationDTO>> listPaginationResult = apiDestinationService.listApiDestinations(UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), "0", 10);
-        Assert.assertNotNull(listPaginationResult.getData());
+        Assertions.assertNotNull(listPaginationResult.getData());
     }
 }

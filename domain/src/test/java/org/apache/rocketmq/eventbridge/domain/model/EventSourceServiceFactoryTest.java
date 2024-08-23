@@ -24,23 +24,22 @@ import org.apache.rocketmq.eventbridge.domain.model.source.EventSource;
 import org.apache.rocketmq.eventbridge.domain.model.source.EventSourceService;
 import org.apache.rocketmq.eventbridge.domain.repository.EventSourceRepository;
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.dao.DuplicateKeyException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventSourceServiceFactoryTest {
 
     @InjectMocks
@@ -52,10 +51,7 @@ public class EventSourceServiceFactoryTest {
     @Mock
     private EventBusService eventBusService;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void before() {
         doNothing().when(eventBusService)
             .checkExist(any(), any());
@@ -63,34 +59,37 @@ public class EventSourceServiceFactoryTest {
 
     @Test
     public void testCreateEventSource_exception1() {
-        when(eventSourceRepository.createEventSource(any(), any(), any(), any(), any(), any(), any(), any())).thenThrow(
-            new DuplicateKeyException(""));
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event source [demo-source] of event bus [demo] already existed!");
-        eventSourceService.createEventSource("123456", "demo", "demo-source", "description", null, null);
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventSourceRepository.createEventSource(any(), any(), any(), any(), any(), any(), any(), any())).thenThrow(
+                new DuplicateKeyException(""));
+            eventSourceService.createEventSource("123456", "demo", "demo-source", "description", null, null);
+        });
+        assertTrue(exception.getMessage().contains("The event source [demo-source] of event bus [demo] already existed!"));
     }
 
     @Test
     public void testCreateEventSource_exception2() {
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event source name [$demo-source] is invalid!");
-        eventSourceService.createEventSource("123456", "demo", "$demo-source", "description", null, null);
+        Throwable exception = assertThrows(EventBridgeException.class, () ->
+            eventSourceService.createEventSource("123456", "demo", "$demo-source", "description", null, null));
+        assertTrue(exception.getMessage().contains("The event source name [$demo-source] is invalid!"));
     }
 
     @Test
     public void testGetEventSource_exception1() {
-        when(eventSourceRepository.getEventSource(any(), any(), any())).thenReturn(null);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event source [demo-source] of event bus [demo] not existed!");
-        eventSourceService.getEventSource("123456", "demo", "demo-source");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventSourceRepository.getEventSource(any(), any(), any())).thenReturn(null);
+            eventSourceService.getEventSource("123456", "demo", "demo-source");
+        });
+        assertTrue(exception.getMessage().contains("The event source [demo-source] of event bus [demo] not existed!"));
     }
 
     @Test
     public void testDeleteEventSource_exception1() {
-        when(eventSourceRepository.getEventSource(any(), any(), any())).thenReturn(null);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event source [demo-source] of event bus [demo] not existed!");
-        eventSourceService.deleteEventSource("123456", "demo", "demo-source");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventSourceRepository.getEventSource(any(), any(), any())).thenReturn(null);
+            eventSourceService.deleteEventSource("123456", "demo", "demo-source");
+        });
+        assertTrue(exception.getMessage().contains("The event source [demo-source] of event bus [demo] not existed!"));
     }
 
     @Test
@@ -105,11 +104,11 @@ public class EventSourceServiceFactoryTest {
         when(eventSourceRepository.listEventSources(any(), any(), any(), anyInt())).thenReturn(eventSources);
         PaginationResult<List<EventSource>> paginationResult = eventSourceService.listEventSources("123456", "demo",
             "0", 10);
-        Assert.assertEquals(1, paginationResult.getTotal());
-        Assert.assertEquals(null, paginationResult.getNextToken());
-        Assert.assertEquals(1, paginationResult.getData()
+        Assertions.assertEquals(1, paginationResult.getTotal());
+        Assertions.assertEquals(null, paginationResult.getNextToken());
+        Assertions.assertEquals(1, paginationResult.getData()
             .size());
-        Assert.assertEquals("demo-source", paginationResult.getData()
+        Assertions.assertEquals("demo-source", paginationResult.getData()
             .get(0)
             .getName());
     }

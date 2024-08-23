@@ -46,22 +46,22 @@ import org.apache.rocketmq.eventbridge.domain.model.connection.parameter.AuthPar
 import org.apache.rocketmq.eventbridge.domain.model.connection.parameter.BasicAuthParameters;
 import org.apache.rocketmq.eventbridge.domain.model.connection.parameter.NetworkParameters;
 import org.apache.rocketmq.eventbridge.domain.rpc.AccountAPI;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class ConnectionControllerTest {
 
     @InjectMocks
@@ -73,7 +73,7 @@ public class ConnectionControllerTest {
     @Mock
     private AccountAPI accountAPI;
 
-    @Before
+    @BeforeEach
     public void testBefore() throws Exception {
         Mockito.when(accountAPI.getResourceOwnerAccountId(any()))
             .thenReturn(UUID.randomUUID()
@@ -113,7 +113,7 @@ public class ConnectionControllerTest {
         createConnectionRequest.setAuthParameters(authParameters);
         final Mono<CreateConnectionResponse> connection = connectionController.createConnection(
             createConnectionRequest);
-        Assert.assertEquals(connection.block()
+        Assertions.assertEquals(connection.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -130,7 +130,7 @@ public class ConnectionControllerTest {
             .toString());
         final Mono<DeleteConnectionResponse> deleteConnectionResponse = connectionController.deleteConnection(
             deleteConnectionRequest);
-        Assert.assertEquals(deleteConnectionResponse.block()
+        Assertions.assertEquals(deleteConnectionResponse.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -167,7 +167,7 @@ public class ConnectionControllerTest {
         updateConnectionRequest.setAuthParameters(authParameters);
         final Mono<UpdateConnectionResponse> updateConnectionResponse = connectionController.updateConnection(
             updateConnectionRequest);
-        Assert.assertEquals(updateConnectionResponse.block()
+        Assertions.assertEquals(updateConnectionResponse.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -205,7 +205,7 @@ public class ConnectionControllerTest {
             .toString());
         final Mono<GetConnectionResponse> getConnectionResponse = connectionController.getConnection(
             getConnectionRequest);
-        Assert.assertEquals(getConnectionResponse.block()
+        Assertions.assertEquals(getConnectionResponse.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -243,7 +243,7 @@ public class ConnectionControllerTest {
             .toString());
         final Mono<GetConnectionResponse> getConnectionResponse = connectionController.selectOneConnection(
             getConnectionRequest);
-        Assert.assertEquals(getConnectionResponse.block()
+        Assertions.assertEquals(getConnectionResponse.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -271,14 +271,14 @@ public class ConnectionControllerTest {
         listConnectionRequest.setMaxResults(10);
         final Mono<ListConnectionResponse> listConnections = connectionController.listConnections(
             listConnectionRequest);
-        Assert.assertEquals(listConnections.block()
+        Assertions.assertEquals(listConnections.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
     @Test
     public void testListEnumsResponse() {
         final Mono<ListEnumsResponse> listEnumsResponse = connectionController.listEnumsResponse();
-        Assert.assertEquals(listEnumsResponse.block()
+        Assertions.assertEquals(listEnumsResponse.block()
             .getNetworkTypeEnums()
             .size(), NetworkTypeEnum.values().length);
     }

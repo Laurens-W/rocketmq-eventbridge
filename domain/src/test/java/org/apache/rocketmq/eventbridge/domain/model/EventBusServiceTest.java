@@ -23,21 +23,20 @@ import org.apache.rocketmq.eventbridge.domain.model.bus.EventBus;
 import org.apache.rocketmq.eventbridge.domain.model.bus.EventBusService;
 import org.apache.rocketmq.eventbridge.domain.repository.EventBusRepository;
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.dao.DuplicateKeyException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventBusServiceTest {
 
     @InjectMocks
@@ -46,38 +45,38 @@ public class EventBusServiceTest {
     @Mock
     private EventBusRepository eventBusRepository;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void testCreateEventBus_exception1() {
-        when(eventBusRepository.createEventBus(any(), any(), any())).thenThrow(new DuplicateKeyException(""));
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event bus [demo] already existed!");
-        eventBusService.createEventBus("123456", "demo", "description");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventBusRepository.createEventBus(any(), any(), any())).thenThrow(new DuplicateKeyException(""));
+            eventBusService.createEventBus("123456", "demo", "description");
+        });
+        assertTrue(exception.getMessage().contains("The event bus [demo] already existed!"));
     }
 
     @Test
     public void testCreateEventBus_exception2() {
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event bus name [default] is invalid!");
-        eventBusService.createEventBus("123456", "default", "description");
+        Throwable exception = assertThrows(EventBridgeException.class, () ->
+            eventBusService.createEventBus("123456", "default", "description"));
+        assertTrue(exception.getMessage().contains("The event bus name [default] is invalid!"));
     }
 
     @Test
     public void testGetEventBus_exception1() {
-        when(eventBusRepository.getEventBus(any(), any())).thenReturn(null);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event bus [demo] not existed!");
-        eventBusService.getEventBus("123456", "demo");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventBusRepository.getEventBus(any(), any())).thenReturn(null);
+            eventBusService.getEventBus("123456", "demo");
+        });
+        assertTrue(exception.getMessage().contains("The event bus [demo] not existed!"));
     }
 
     @Test
     public void testDeleteEventBus_exception1() {
-        when(eventBusRepository.getEventBus(any(), any())).thenReturn(null);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The event bus [demo] not existed!");
-        eventBusService.deleteEventBus("123456", "demo");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventBusRepository.getEventBus(any(), any())).thenReturn(null);
+            eventBusService.deleteEventBus("123456", "demo");
+        });
+        assertTrue(exception.getMessage().contains("The event bus [demo] not existed!"));
     }
 
     @Test
@@ -88,11 +87,11 @@ public class EventBusServiceTest {
         when(eventBusRepository.getEventBusesCount(any())).thenReturn(1);
         when(eventBusRepository.listEventBuses(any(), any(), anyInt())).thenReturn(eventBuses);
         PaginationResult<List<EventBus>> paginationResult = eventBusService.listEventBuses("123456", "0", 10);
-        Assert.assertEquals(1, paginationResult.getTotal());
-        Assert.assertEquals(null, paginationResult.getNextToken());
-        Assert.assertEquals(1, paginationResult.getData()
+        Assertions.assertEquals(1, paginationResult.getTotal());
+        Assertions.assertEquals(null, paginationResult.getNextToken());
+        Assertions.assertEquals(1, paginationResult.getData()
             .size());
-        Assert.assertEquals("demo", paginationResult.getData()
+        Assertions.assertEquals("demo", paginationResult.getData()
             .get(0)
             .getName());
     }

@@ -41,20 +41,20 @@ import org.apache.rocketmq.eventbridge.domain.model.apidestination.ApiDestinatio
 import org.apache.rocketmq.eventbridge.domain.model.apidestination.ApiDestinationService;
 import org.apache.rocketmq.eventbridge.domain.model.apidestination.parameter.HttpApiParameters;
 import org.apache.rocketmq.eventbridge.domain.rpc.AccountAPI;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class ApiDestinationDTOControllerTest {
 
     @InjectMocks
@@ -66,7 +66,7 @@ public class ApiDestinationDTOControllerTest {
     @Mock
     private AccountAPI accountAPI;
 
-    @Before
+    @BeforeEach
     public void testBefore() {
         Mockito.when(accountAPI.getResourceOwnerAccountId(any()))
             .thenReturn(UUID.randomUUID()
@@ -92,7 +92,7 @@ public class ApiDestinationDTOControllerTest {
         createApiDestinationRequest.setInvocationRateLimitPerSecond(11);
         final Mono<CreateApiDestinationResponse> apiDestination = apiDestinationController.createApiDestination(
             createApiDestinationRequest);
-        Assert.assertEquals(apiDestination.block()
+        Assertions.assertEquals(apiDestination.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -117,7 +117,7 @@ public class ApiDestinationDTOControllerTest {
         updateApiDestinationRequest.setInvocationRateLimitPerSecond(11);
         final Mono<UpdateApiDestinationResponse> updateApiDestinationResponse
             = apiDestinationController.updateApiDestination(updateApiDestinationRequest);
-        Assert.assertEquals(updateApiDestinationResponse.block()
+        Assertions.assertEquals(updateApiDestinationResponse.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -137,7 +137,7 @@ public class ApiDestinationDTOControllerTest {
             .toString());
         final Mono<GetApiDestinationResponse> apiDestination = apiDestinationController.getApiDestination(
             getApiDestinationRequest);
-        Assert.assertEquals(apiDestination.block()
+        Assertions.assertEquals(apiDestination.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -153,7 +153,7 @@ public class ApiDestinationDTOControllerTest {
             .toString());
         final Mono<DeleteApiDestinationResponse> deleteApiDestinationResponse
             = apiDestinationController.deleteApiDestination(deleteApiDestinationRequest);
-        Assert.assertEquals(deleteApiDestinationResponse.block()
+        Assertions.assertEquals(deleteApiDestinationResponse.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 
@@ -181,7 +181,7 @@ public class ApiDestinationDTOControllerTest {
         listApiDestinationsRequest.setMaxResults(10);
         final Mono<ListApiDestinationsResponse> listApiDestinationsResponse
             = apiDestinationController.listApiDestinations(listApiDestinationsRequest);
-        Assert.assertEquals(listApiDestinationsResponse.block()
+        Assertions.assertEquals(listApiDestinationsResponse.block()
             .getCode(), EventBridgeErrorCode.Success.getCode());
     }
 }

@@ -24,19 +24,18 @@ import org.apache.rocketmq.eventbridge.domain.model.classes.EventSourceClass;
 import org.apache.rocketmq.eventbridge.domain.model.classes.EventSourceClassService;
 import org.apache.rocketmq.eventbridge.domain.repository.EventSourceClassRepository;
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventSourceClassServiceTest {
 
     @InjectMocks
@@ -45,12 +44,9 @@ public class EventSourceClassServiceTest {
     @Mock
     EventSourceClassRepository eventSourceClassRepository;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     private String testSourceClassName = "acs.mns";
 
-    @Before
+    @BeforeEach
     public void before() {
         Map<String, APIAttribute> apiParams = Maps.newHashMap();
         apiParams.put("RegionId", new APIAttribute("", "The source region id.", false, null));
@@ -88,24 +84,25 @@ public class EventSourceClassServiceTest {
 
     @Test
     public void checkEventSourceAPIParams_EventSourceMissingAttribute() {
-        Map<String, Object> inputConfig = Maps.newHashMap();
-        inputConfig.put("QueueName", "demo");
-        inputConfig.put("IsBase64Encode", true);
-        inputConfig.put("InvalidAttribute", true);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage(
-            "The attribute [InvalidAttribute] is ineffective, which effective attribute is [IsBase64Encode,RegionId,"
-                + "QueueName].");
-        eventSourceClassService.checkEventSourceAPIParams(testSourceClassName, inputConfig);
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            Map<String, Object> inputConfig = Maps.newHashMap();
+            inputConfig.put("QueueName", "demo");
+            inputConfig.put("IsBase64Encode", true);
+            inputConfig.put("InvalidAttribute", true);
+            eventSourceClassService.checkEventSourceAPIParams(testSourceClassName, inputConfig);
+        });
+        assertTrue(exception.getMessage().contains("The attribute [InvalidAttribute] is ineffective, which effective attribute is [IsBase64Encode,RegionId,"
+            + "QueueName]."));
     }
 
     @Test
     public void checkEventSourceAPIParams_EventSourceIneffectiveAttribute() {
-        Map<String, Object> inputConfig = Maps.newHashMap();
-        inputConfig.put("IsBase64Encode", true);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("Missing the attribute [QueueName:The queue name.] ");
-        eventSourceClassService.checkEventSourceAPIParams(testSourceClassName, inputConfig);
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            Map<String, Object> inputConfig = Maps.newHashMap();
+            inputConfig.put("IsBase64Encode", true);
+            eventSourceClassService.checkEventSourceAPIParams(testSourceClassName, inputConfig);
+        });
+        assertTrue(exception.getMessage().contains("Missing the attribute [QueueName:The queue name.] "));
     }
 
     @Test
@@ -116,14 +113,14 @@ public class EventSourceClassServiceTest {
         inputConfig.put("IsBase64Encode", true);
         Component component = eventSourceClassService.renderConfig("123456", testSourceClassName, inputConfig);
         System.out.println(new Gson().toJson(component));
-        Assert.assertEquals(testSourceClassName, component.getName());
-        Assert.assertEquals("123456.mns.cn-hangzhou.aliyuncs.com", component.getConfig()
+        Assertions.assertEquals(testSourceClassName, component.getName());
+        Assertions.assertEquals("123456.mns.cn-hangzhou.aliyuncs.com", component.getConfig()
             .get("Endpoint"));
-        Assert.assertEquals("UserDefinedRoleName", component.getConfig()
+        Assertions.assertEquals("UserDefinedRoleName", component.getConfig()
             .get("RoleName"));
-        Assert.assertEquals("demo", component.getConfig()
+        Assertions.assertEquals("demo", component.getConfig()
             .get("QueueName"));
-        Assert.assertEquals("true", component.getConfig()
+        Assertions.assertEquals("true", component.getConfig()
             .get("IsBase64Encode"));
     }
 
@@ -137,10 +134,10 @@ public class EventSourceClassServiceTest {
         Map<String, Object> transform = eventSourceClassService.renderCloudEventTransform("123456", testSourceClassName,
             inputConfig, "eventSource");
 
-        Assert.assertEquals("{\"value\":\"$.data\",\"form\":\"JSONPATH\"}", transform.get("data"));
-        Assert.assertEquals("{\"value\":\"acs:mns:cn-hangzhou:123456:queues/demo\",\"form\":\"CONSTANT\"}",
+        Assertions.assertEquals("{\"value\":\"$.data\",\"form\":\"JSONPATH\"}", transform.get("data"));
+        Assertions.assertEquals("{\"value\":\"acs:mns:cn-hangzhou:123456:queues/demo\",\"form\":\"CONSTANT\"}",
             transform.get("subject"));
-        Assert.assertEquals("{\"form\":\"CONSTANT\",\"value\":\"eventSource\"}", transform.get("source"));
-        Assert.assertEquals("{\"value\":\"mns.sendMsg\",\"form\":\"CONSTANT\"}", transform.get("type"));
+        Assertions.assertEquals("{\"form\":\"CONSTANT\",\"value\":\"eventSource\"}", transform.get("source"));
+        Assertions.assertEquals("{\"value\":\"mns.sendMsg\",\"form\":\"CONSTANT\"}", transform.get("type"));
     }
 }

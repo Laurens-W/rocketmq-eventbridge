@@ -21,9 +21,9 @@ import java.time.Duration;
 import org.apache.rocketmq.eventbridge.adapter.runtime.boot.common.TargetRunnerListener;
 import org.apache.rocketmq.eventbridge.adapter.runtime.common.entity.TargetRunnerConfig;
 import org.apache.rocketmq.eventbridge.adapter.runtime.service.TargetRunnerConfigOnFileObserver;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static org.apache.rocketmq.eventbridge.runtimer.service.TestConstants.DEMO_TARGET_RUNNER_CONFIG_FILE_NAME;
 import static org.awaitility.Awaitility.await;
@@ -31,16 +31,16 @@ import static org.awaitility.Awaitility.await;
 public class TargetRunnerConfigOnFileObserverTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testGetLatestTargetRunnerConfig() {
         TargetRunnerConfigUtil.resetTargetRunner(getConfigFilePath());
         TargetRunnerConfigOnFileObserver targetRunnerConfigOnFileObserver = new TargetRunnerConfigOnFileObserver(getConfigFilePath());
         System.out.println(targetRunnerConfigOnFileObserver.getLatestTargetRunnerConfig());
-        Assert.assertTrue(!targetRunnerConfigOnFileObserver.getLatestTargetRunnerConfig().stream().findFirst().get().getComponents().isEmpty());
+        Assertions.assertTrue(!targetRunnerConfigOnFileObserver.getLatestTargetRunnerConfig().stream().findFirst().get().getComponents().isEmpty());
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testListen_Add() throws InterruptedException {
         String path = getConfigFilePath();
         TestTargetRunnerListener targetRunnerListener = initTargetRunnerConfigOnFileObserver(path);
@@ -51,7 +51,7 @@ public class TargetRunnerConfigOnFileObserverTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testListen_Delete() throws InterruptedException {
         String path = getConfigFilePath();
         TestTargetRunnerListener targetRunnerListener = initTargetRunnerConfigOnFileObserver(path);
@@ -62,7 +62,7 @@ public class TargetRunnerConfigOnFileObserverTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testListen_Update() throws InterruptedException {
         String path = getConfigFilePath();
         TestTargetRunnerListener targetRunnerListener = initTargetRunnerConfigOnFileObserver(path);

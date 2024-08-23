@@ -24,15 +24,15 @@ import java.util.Set;
 import org.apache.rocketmq.eventbridge.config.AppConfig;
 import org.apache.rocketmq.eventbridge.config.GlobalConfig;
 import org.apache.rocketmq.eventbridge.tools.JsonUtil;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 public class PatternEvaluatorTest {
 
-    @Before
+    @BeforeEach
     public void before() {
         GlobalConfig globalConfig = new GlobalConfig();
         Set<String> eventExtensionKeys = Sets.newHashSet("aliyunregionid");

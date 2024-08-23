@@ -19,10 +19,10 @@ package org.apache.rocketmq.eventbridge.tools.transform;
 
 import java.text.MessageFormat;
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JsonPathExtractTest {
 
@@ -37,37 +37,35 @@ public class JsonPathExtractTest {
     private static final String RIGHT_STRUCT_JSON = "{\n" + "    \"title\":\"$.data.title\",\n"
         + "    \"content\":\"$.data.content\"\n" + "}";
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
-    public void testInvalidEmptyQuotes() throws EventBridgeException {
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage(
-            MessageFormat.format(TransformErrorCode.InvalidConfig.getMsg(), INVALID_JSON_EMPTY_QUOTES));
-        new JsonPathExtract(INVALID_JSON_EMPTY_QUOTES);
+    public void testInvalidEmptyQuotes() {
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            new JsonPathExtract(INVALID_JSON_EMPTY_QUOTES);
+        });
+        assertTrue(exception.getMessage().contains(MessageFormat.format(TransformErrorCode.InvalidConfig.getMsg(), INVALID_JSON_EMPTY_QUOTES)));
     }
 
     @Test
-    public void testWrongStructSingleLevel() throws EventBridgeException {
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage(
-            MessageFormat.format(TransformErrorCode.InvalidConfig.getMsg(), WRONG_STRUCT_SINGLE_LEVEL));
-        new JsonPathExtract(WRONG_STRUCT_SINGLE_LEVEL);
+    public void testWrongStructSingleLevel() {
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            new JsonPathExtract(WRONG_STRUCT_SINGLE_LEVEL);
+
+        });
+        assertTrue(exception.getMessage().contains(MessageFormat.format(TransformErrorCode.InvalidConfig.getMsg(), WRONG_STRUCT_SINGLE_LEVEL)));
 
     }
 
     @Test
-    public void testWrongStructMultiLevel() throws EventBridgeException {
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage(
-            MessageFormat.format(TransformErrorCode.InvalidConfig.getMsg(), WRONG_STRUCT_MULTI_LEVEL));
-        new JsonPathExtract(WRONG_STRUCT_MULTI_LEVEL);
+    public void testWrongStructMultiLevel() {
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            new JsonPathExtract(WRONG_STRUCT_MULTI_LEVEL);
+        });
+        assertTrue(exception.getMessage().contains(MessageFormat.format(TransformErrorCode.InvalidConfig.getMsg(), WRONG_STRUCT_MULTI_LEVEL)));
     }
 
     @Test
     public void testRightStructJson() throws EventBridgeException {
-        Assert.assertEquals(2, new JsonPathExtract(RIGHT_STRUCT_JSON).getExtractList()
+        Assertions.assertEquals(2, new JsonPathExtract(RIGHT_STRUCT_JSON).getExtractList()
             .size());
     }
 

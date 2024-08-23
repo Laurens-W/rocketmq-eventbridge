@@ -20,20 +20,17 @@ package org.apache.rocketmq.eventbridge.tools.pattern;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PatternEvaluatorBuilderTest {
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
-    @Ignore
+    @Disabled
     public void build_ComplexPatter() {
         String pattern = "{\n" + "    \"source\": [\"mq\", \"ecs\", 123],\n"
             + "    \"aliyunregionid\": [\"cn-hangzhou\", {\"prefix\": \"cn-\"}],\n" + "    \"data\": {\n"
@@ -108,220 +105,246 @@ public class PatternEvaluatorBuilderTest {
 
     @Test
     public void build_EmptyPatternValue() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_PATTERN_VALUE + "[]");
-        String pattern = "{\"source\": []}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": []}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_PATTERN_VALUE + "[]"));
     }
 
     @Test
     public void build_UnSupportedJsonPattern() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.NON_SUPPORTED_JSON);
-        String pattern = "abc";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "abc";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.NON_SUPPORTED_JSON));
     }
 
     @Test
     public void build_UnSupportedJsonArray() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.NON_SUPPORTED_JSON);
-        String pattern = "[123]";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "[123]";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.NON_SUPPORTED_JSON));
     }
 
     @Test
     public void build_InvalidJSONPattern() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_JSON_STRING);
-        String pattern = "[123{]";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "[123{]";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_JSON_STRING));
     }
 
     @Test
     public void build_InvalidPatternFieldValue() {
-        String fieldVal = "abc";
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_PATTERN_VALUE + fieldVal);
-        String pattern = String.format("{\"source\": \"%s\"}", fieldVal);
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String fieldVal = "abc";
+            String pattern = String.format("{\"source\": \"%s\"}", fieldVal);
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_PATTERN_VALUE + fieldVal));
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void build_UnrecognizedFieldKey() {
-        String unrecognizedKey = "unrecognizedKey";
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.UNRECOGNIZED_PATTERN_KEY + unrecognizedKey);
-        String pattern = String.format("{\"%s\": [123]}", unrecognizedKey);
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String unrecognizedKey = "unrecognizedKey";
+            String pattern = String.format("{\"%s\": [123]}", unrecognizedKey);
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.UNRECOGNIZED_PATTERN_KEY + unrecognizedKey));
     }
 
     @Test
     public void build_NoDataPatternKey() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.NO_DATA_PATTERN_KEY);
-        String pattern = "{\"data\":{}}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"data\":{}}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.NO_DATA_PATTERN_KEY));
     }
 
     @Test
     public void build_NoDataPatternKey_Complex() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.NO_DATA_PATTERN_KEY);
-        String pattern = "{\"data\":{\"c-count\":[123],\"map-node\":{\"inner-node1\":[{\"prefix\":\"abc\"},\"def\"],"
-            + "\"inner-node2\":{}}}}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"data\":{\"c-count\":[123],\"map-node\":{\"inner-node1\":[{\"prefix\":\"abc\"},\"def\"],"
+                + "\"inner-node2\":{}}}}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.NO_DATA_PATTERN_KEY));
     }
 
     @Test
     public void build_InvalidPatternFieldValue_Complex() {
-        String fieldVal = "abc";
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_PATTERN_VALUE + fieldVal);
-        String pattern = String.format("{\"data\": {\"key\": \"%s\"}}", fieldVal);
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String fieldVal = "abc";
+            String pattern = String.format("{\"data\": {\"key\": \"%s\"}}", fieldVal);
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_PATTERN_VALUE + fieldVal));
     }
 
     @Test
     public void build_NestedPatternValue() {
-        String nestedKey = "source";
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.NESTED_PATTERN_VALUE + nestedKey);
-        String pattern = String.format("{\"%s\": [123, [234]]}", nestedKey);
-        System.out.println(pattern);
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String nestedKey = "source";
+            String pattern = String.format("{\"%s\": [123, [234]]}", nestedKey);
+            System.out.println(pattern);
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.NESTED_PATTERN_VALUE + nestedKey));
     }
 
     @Test
     public void build_UnrecognizedPatternCondition() {
-        String unrecognizedKey = "unrecognizedKey";
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.UNRECOGNIZED_PATTERN_CONDITION + unrecognizedKey);
-        String pattern = String.format("{\"source\": [{\"%s\": \"abc\"}]}", unrecognizedKey);
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String unrecognizedKey = "unrecognizedKey";
+            String pattern = String.format("{\"source\": [{\"%s\": \"abc\"}]}", unrecognizedKey);
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.UNRECOGNIZED_PATTERN_CONDITION + unrecognizedKey));
     }
 
     @Test
     public void build_EmptyPrefixCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.EMPTY_PREFIX_CONDITION);
-        String pattern = "{\"source\": [{\"prefix\": \"\"}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"prefix\": \"\"}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.EMPTY_PREFIX_CONDITION));
     }
 
     @Test
     public void build_InvalidPrefixCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_PREFIX_CONDITION);
-        String pattern = "{\"source\": [{\"prefix\": [\"abc\"]}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"prefix\": [\"abc\"]}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_PREFIX_CONDITION));
     }
 
     @Test
     public void build_EmptySuffixCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.EMPTY_SUFFIX_CONDITION);
-        String pattern = "{\"source\": [{\"suffix\": \"\"}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"suffix\": \"\"}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.EMPTY_SUFFIX_CONDITION));
     }
 
     @Test
     public void build_InvalidSuffixCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_SUFFIX_CONDITION);
-        String pattern = "{\"source\": [{\"suffix\": [\"abc\"]}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"suffix\": [\"abc\"]}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_SUFFIX_CONDITION));
     }
 
     @Test
     public void build_InvalidExistsCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_EXISTS_CONDITION);
-        String pattern = "{\"source\": [{\"exists\": \"true\"}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"exists\": \"true\"}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_EXISTS_CONDITION));
     }
 
     @Test
     public void build_InvalidCidrCondition_Non_String() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_CIDR_CONDITION);
-        String pattern = "{\"source\": [{\"cidr\": 12345}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"cidr\": 12345}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_CIDR_CONDITION));
     }
 
     @Test
     public void build_InvalidCidrCondition_Non_IpV4() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_CIDR_CONDITION);
-        String pattern = "{\"source\": [{\"cidr\": \"fefefef\"}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"cidr\": \"fefefef\"}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_CIDR_CONDITION));
     }
 
     @Test
     public void build_InvalidAnythingButCondition_EmptyNestedCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_PATTERN_CONDITION);
-        String pattern = "{\"source\": [{\"anything-but\": {}}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"anything-but\": {}}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_PATTERN_CONDITION));
     }
 
     @Test
     public void build_InvalidAnythingButCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_ANYTHING_BUT_CONDITION);
-        String pattern = "{\"source\": [{\"anything-but\": [[123]]}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"anything-but\": [[123]]}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_ANYTHING_BUT_CONDITION));
     }
 
     @Test
     public void build_InvalidNestedAnythingButCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_NESTED_ANYTHING_BUT_CONDITION);
-        String pattern = "{\"source\": [{\"anything-but\": {\"cidr\": \"127.0.0.1\"}}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"anything-but\": {\"cidr\": \"127.0.0.1\"}}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_NESTED_ANYTHING_BUT_CONDITION));
     }
 
     @Test
     public void build_InvalidNumericCondition() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_NUMERIC_CONDITION);
-        String pattern = "{\"source\": [{\"numeric\": 123}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"numeric\": 123}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_NUMERIC_CONDITION));
     }
 
     @Test
     public void build_InvalidNumericConditionValue() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.INVALID_NUMERIC_CONDITION_VALUE);
-        String pattern = "{\"source\": [{\"numeric\": [\">\", 1.0e10]}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"numeric\": [\">\", 1.0e10]}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.INVALID_NUMERIC_CONDITION_VALUE));
     }
 
     @Test
     public void build_UnrecognizedNumericConditionValue() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.UNRECOGNIZED_NUMERIC_CONDITION_VALUE);
-        String pattern = "{\"source\": [{\"numeric\": [1234, 1.0e10]}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"numeric\": [1234, 1.0e10]}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.UNRECOGNIZED_NUMERIC_CONDITION_VALUE));
     }
 
     @Test
     public void build_UnrecognizedNumericConditionExp() {
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.UNRECOGNIZED_NUMERIC_CONDITION_EXP);
-        String pattern = "{\"source\": [{\"numeric\": [\"===\", 1.0e8]}]}";
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String pattern = "{\"source\": [{\"numeric\": [\"===\", 1.0e8]}]}";
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.UNRECOGNIZED_NUMERIC_CONDITION_EXP));
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void build_UnrecognizedAliyunExtension() {
-        String key = "aliyununrecognizedKey";
-        expectedEx.expect(InvalidEventPatternException.class);
-        expectedEx.expectMessage(PatternErrorMessages.UNRECOGNIZED_PATTERN_KEY + key);
-        String pattern = String.format("{\"%s\": [\"value\"]}", key);
-        PatternEvaluatorBuilder.build(pattern);
+        Throwable exception = assertThrows(InvalidEventPatternException.class, () -> {
+            String key = "aliyununrecognizedKey";
+            String pattern = String.format("{\"%s\": [\"value\"]}", key);
+            PatternEvaluatorBuilder.build(pattern);
+        });
+        assertTrue(exception.getMessage().contains(PatternErrorMessages.UNRECOGNIZED_PATTERN_KEY + key));
     }
 
     @Test
@@ -332,10 +355,10 @@ public class PatternEvaluatorBuilderTest {
             + "    \"prefix\" : \"acs:oss:cn-shanghai:1646030314736845:ali-hdsh-ai-label-online-bucket/\"\n" + "  } ]\n"
             + "}";
         String targetPattern = PatternEvaluatorBuilder.getTargetElementOfFilterPattern(sourcePattern, "source", "type");
-        Assert.assertEquals("{\"source\":[\"acs.oss\"],\"type\":[\"oss:ObjectCreated:PostObject\","
+        Assertions.assertEquals("{\"source\":[\"acs.oss\"],\"type\":[\"oss:ObjectCreated:PostObject\","
             + "\"oss:ObjectCreated:PutObject\",\"oss:ObjectCreated:CopyObject\","
             + "\"oss:ObjectCreated:CompleteMultipartUpload\"]}", targetPattern);
 
-        Assert.assertEquals("{}", PatternEvaluatorBuilder.getTargetElementOfFilterPattern("{}", "source", "type"));
+        Assertions.assertEquals("{}", PatternEvaluatorBuilder.getTargetElementOfFilterPattern("{}", "source", "type"));
     }
 }

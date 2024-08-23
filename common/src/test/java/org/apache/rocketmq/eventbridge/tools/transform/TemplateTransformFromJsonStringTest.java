@@ -18,8 +18,8 @@
 package org.apache.rocketmq.eventbridge.tools.transform;
 
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
 
@@ -32,7 +32,7 @@ public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
         Transform transform = TransformBuilder.buildTemplateTransForm(extractJson, template);
         Data output = transform.process(new StringData(JSON_EVENT));
         System.out.println(output.toString());
-        Assert.assertEquals("{\n  \"text\":\"100\",\n  \"number\":100,\n  \"data\":\"666\"\n}", output.toString());
+        Assertions.assertEquals("{\n  \"text\":\"100\",\n  \"number\":100,\n  \"data\":\"666\"\n}", output.toString());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
         String template = "The ${text} = ${number}!";
         Transform transform = TransformBuilder.buildTemplateTransForm(extractJson, template);
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("The 100 = 100!", output.toString());
+        Assertions.assertEquals("The 100 = 100!", output.toString());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
         String template = "The ${text} = ${number}!";
         Transform transform = TransformBuilder.buildTemplateTransForm(extractJson, template);
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("The ${text} = ${number}!", output.toString());
+        Assertions.assertEquals("The ${text} = ${number}!", output.toString());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
         String template = "The ${text} = ${number}!";
         Transform transform = TransformBuilder.buildTemplateTransForm(extractJson, template);
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("The ${text} = ${number}!", output.toString());
+        Assertions.assertEquals("The ${text} = ${number}!", output.toString());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
         String template = "The ${text} = ${number}!";
         Transform transform = TransformBuilder.buildTemplateTransForm(extractJson, template);
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("The null = null!", output.toString());
+        Assertions.assertEquals("The null = null!", output.toString());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
         String template = "The instance is broken，which name is ${name} , ${constant}";
         Transform transform = TransformBuilder.buildTemplateTransForm(extractJson, template);
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("The instance is broken，which name is 100 , Please deal with it timely.",
+        Assertions.assertEquals("The instance is broken，which name is 100 , Please deal with it timely.",
             output.toString());
     }
 
@@ -87,7 +87,7 @@ public class TemplateTransformFromJsonStringTest extends BaseTransformTest {
         String template = "The instance is broken，which name is ${name} , ${table}";
         Transform transform = TransformBuilder.buildTemplateTransForm(extractJson, template);
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("The instance is broken，which name is 100 , tableName",
+        Assertions.assertEquals("The instance is broken，which name is 100 , tableName",
             output.toString());
     }
 

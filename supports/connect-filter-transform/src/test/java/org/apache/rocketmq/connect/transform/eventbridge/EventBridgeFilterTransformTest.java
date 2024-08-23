@@ -20,8 +20,8 @@ package org.apache.rocketmq.connect.transform.eventbridge;
 import io.openmessaging.KeyValue;
 import io.openmessaging.connector.api.data.ConnectRecord;
 import io.openmessaging.internal.DefaultKeyValue;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class EventBridgeFilterTransformTest {
 
@@ -34,9 +34,9 @@ public class EventBridgeFilterTransformTest {
 
         ConnectRecord record = new ConnectRecord(null, null, System.currentTimeMillis());
         record.addExtension("source", "acs.demo");
-        Assert.assertNull(transform.doTransform(record));
+        Assertions.assertNull(transform.doTransform(record));
 
         record.addExtension("source", "acs.mns");
-        Assert.assertNotNull(transform.doTransform(record));
+        Assertions.assertNotNull(transform.doTransform(record));
     }
 }

@@ -18,8 +18,8 @@
 package org.apache.rocketmq.eventbridge.tools.transform;
 
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ConstantTransformTest extends BaseTransformTest {
 
@@ -27,7 +27,7 @@ public class ConstantTransformTest extends BaseTransformTest {
     public void testTransformJsonPath_OneKey() throws EventBridgeException {
         Transform transform = TransformBuilder.buildConstantTransform("I am a constant!");
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("I am a constant!", output.toString());
+        Assertions.assertEquals("I am a constant!", output.toString());
     }
 
 }

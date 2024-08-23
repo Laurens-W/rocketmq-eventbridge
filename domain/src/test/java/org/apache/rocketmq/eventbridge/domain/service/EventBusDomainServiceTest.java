@@ -21,18 +21,17 @@ import org.apache.rocketmq.eventbridge.domain.model.bus.EventBusService;
 import org.apache.rocketmq.eventbridge.domain.model.rule.EventRuleService;
 import org.apache.rocketmq.eventbridge.domain.model.source.EventSourceService;
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class EventBusDomainServiceTest {
 
     @InjectMocks
@@ -44,23 +43,22 @@ public class EventBusDomainServiceTest {
     @Mock
     private EventBusService eventBusService;
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void deleteEventBusCheckDependencies_exception1() {
-        when(eventRuleService.getEventRulesCount(any(), any())).thenReturn(1);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The rules of eventbus [demo] exist, please delete them before delete event bus.");
-        eventBusDomainService.deleteEventBusCheckDependencies("123456", "demo");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventRuleService.getEventRulesCount(any(), any())).thenReturn(1);
+            eventBusDomainService.deleteEventBusCheckDependencies("123456", "demo");
+        });
+        assertTrue(exception.getMessage().contains("The rules of eventbus [demo] exist, please delete them before delete event bus."));
     }
 
     @Test
     public void deleteEventBusCheckDependencies_exception2() {
-        when(eventSourceService.getEventSourceCount(any(), any())).thenReturn(1);
-        thrown.expect(EventBridgeException.class);
-        thrown.expectMessage("The source of eventbus  [demo] exist, please delete them before delete event bus.");
-        eventBusDomainService.deleteEventBusCheckDependencies("123456", "demo");
+        Throwable exception = assertThrows(EventBridgeException.class, () -> {
+            when(eventSourceService.getEventSourceCount(any(), any())).thenReturn(1);
+            eventBusDomainService.deleteEventBusCheckDependencies("123456", "demo");
+        });
+        assertTrue(exception.getMessage().contains("The source of eventbus  [demo] exist, please delete them before delete event bus."));
     }
 
 }

@@ -87,12 +87,12 @@
         <common.net>3.9.0</common.net>
         <cloudevents.version>2.3.0</cloudevents.version>
         <apache.commons-text.version>1.10.0</apache.commons-text.version>
-        <mockito.version>2.13.0</mockito.version>
+        <mockito.version>4.11.0</mockito.version>
         <jupiter.version>5.9.2</jupiter.version>
         <caffeine.version>2.9.3</caffeine.version>
         <fastjson.version>1.2.83</fastjson.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <rocketmq.version>5.1.0</rocketmq.version>
         <flyway.version>8.5.7</flyway.version>
         <lombok.version>1.18.20</lombok.version>
@@ -356,11 +356,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>

@@ -18,8 +18,8 @@
 package org.apache.rocketmq.eventbridge.tools.transform;
 
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class OriginalTransformTest extends BaseTransformTest {
 
@@ -27,6 +27,6 @@ public class OriginalTransformTest extends BaseTransformTest {
     public void testTransformOriginalFromString() throws EventBridgeException {
         Transform transform = TransformBuilder.buildOriginalTransform();
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals(JSON_EVENT, output.toString());
+        Assertions.assertEquals(JSON_EVENT, output.toString());
     }
 }

@@ -18,9 +18,9 @@
 package org.apache.rocketmq.eventbridge.tools.transform;
 
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class JsonPathTransformFromJsonStringTest extends BaseTransformTest {
 
@@ -28,47 +28,47 @@ public class JsonPathTransformFromJsonStringTest extends BaseTransformTest {
     public void testTransformJsonPath_OneKey() throws EventBridgeException {
         Transform transform = TransformBuilder.buildJsonTransform("$.id");
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("51efe8e2-841f-4900-8ff5-3c6dfae1060e", output.toString());
+        Assertions.assertEquals("51efe8e2-841f-4900-8ff5-3c6dfae1060e", output.toString());
     }
 
     @Test
     public void testTransformJsonPath_TwoKey() throws EventBridgeException {
         Transform transform1 = TransformBuilder.buildJsonTransform("$.id");
         Data output1 = transform1.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("51efe8e2-841f-4900-8ff5-3c6dfae1060e", output1.toString());
+        Assertions.assertEquals("51efe8e2-841f-4900-8ff5-3c6dfae1060e", output1.toString());
 
         Transform transform2 = TransformBuilder.buildJsonTransform("$.type");
         Data output2 = transform2.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("oss:ObjectCreated:PostObject", output2.toString());
+        Assertions.assertEquals("oss:ObjectCreated:PostObject", output2.toString());
     }
 
     @Test
     public void testTransformJsonPath_Number() throws EventBridgeException {
         Transform transform = TransformBuilder.buildJsonTransform("$.data.number");
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("100", output.toString());
+        Assertions.assertEquals("100", output.toString());
     }
 
     @Test
     public void testTransformJsonPath_Array() throws EventBridgeException {
         Transform transform = TransformBuilder.buildJsonTransform("$.data.text");
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals("100", output.toString());
+        Assertions.assertEquals("100", output.toString());
     }
 
     @Test
     public void testTransformJsonPath_Empty() throws EventBridgeException {
         Transform transform = TransformBuilder.buildJsonTransform("$.data.empty");
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals(null, output.toString());
+        Assertions.assertEquals(null, output.toString());
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testTransformJsonPath_Data() throws EventBridgeException {
         // TODO JSON PATH read ignore the null value
         Transform transform = TransformBuilder.buildJsonTransform("$.data");
         Data output = transform.process(new StringData(JSON_EVENT));
-        Assert.assertEquals(JSON_EVENT_DATA.trim(), output.toString());
+        Assertions.assertEquals(JSON_EVENT_DATA.trim(), output.toString());
     }
 }

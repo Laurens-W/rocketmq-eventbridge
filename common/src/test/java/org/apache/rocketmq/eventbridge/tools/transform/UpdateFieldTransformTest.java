@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import net.minidev.json.JSONObject;
 import org.apache.rocketmq.eventbridge.exception.EventBridgeException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class UpdateFieldTransformTest {
 

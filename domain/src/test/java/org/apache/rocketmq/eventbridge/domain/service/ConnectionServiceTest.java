@@ -34,21 +34,20 @@ import org.apache.rocketmq.eventbridge.domain.repository.ApiDestinationRepositor
 import org.apache.rocketmq.eventbridge.domain.repository.ConnectionRepository;
 import org.apache.rocketmq.eventbridge.domain.rpc.NetworkServiceAPI;
 import org.apache.rocketmq.eventbridge.domain.rpc.SecretManagerAPI;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
-@RunWith(MockitoJUnitRunner.class)
+@MockitoSettings(strictness = Strictness.WARN)
 public class ConnectionServiceTest {
 
     @InjectMocks
@@ -64,7 +63,7 @@ public class ConnectionServiceTest {
     @Mock
     private QuotaService quotaService;
 
-    @Before
+    @BeforeEach
     public void testBefore() throws Exception {
         Mockito.when(connectionRepository.createConnection(any())).thenReturn(Boolean.TRUE);
         Mockito.when(connectionRepository.listConnections(anyString(), anyString(), anyString(), anyInt())).thenReturn(new ArrayList<>());
@@ -100,7 +99,7 @@ public class ConnectionServiceTest {
         authParameters.setAuthorizationType(AuthorizationTypeEnum.BASIC_AUTH.getType());
         connectionDTO.setAuthParameters(authParameters);
         final String connection = connectionService.createConnection(connectionDTO);
-        Assert.assertNotNull(connection);
+        Assertions.assertNotNull(connection);
     }
 
     @Test
@@ -135,12 +134,12 @@ public class ConnectionServiceTest {
     @Test
     public void testGetConnection() {
         final List<ConnectionDTO> connectionDTO = connectionService.getConnection(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        Assert.assertNotNull(connectionDTO);
+        Assertions.assertNotNull(connectionDTO);
     }
 
     @Test
     public void testListConnections() {
         final PaginationResult<List<ConnectionDTO>> listPaginationResult = connectionService.listConnections(UUID.randomUUID().toString(), UUID.randomUUID().toString(), "0", 10);
-        Assert.assertNotNull(listPaginationResult.getData());
+        Assertions.assertNotNull(listPaginationResult.getData());
     }
 }
